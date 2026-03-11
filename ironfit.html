@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IronFit — Academia de Alto Desempenho</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700;1,900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:    #0c0c0c;
+      --bg2:   #141414;
+      --red:   #e02020;
+      --red2:  #ff3333;
+      --white: #f5f5f0;
+      --gray:  #888;
+      --dim:   #333;
+      --border: rgba(255,255,255,0.06);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 256px; opacity: 1;
+    }
+
+    section, nav, footer { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 60px;
+      transition: background .3s, border-color .3s;
+    }
+    nav.scrolled {
+      background: rgba(12,12,12,.97);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.6rem; font-weight: 900;
+      letter-spacing: .08em; text-decoration: none; color: var(--white);
+      text-transform: uppercase;
+    }
+    .nav-logo span { color: var(--red); }
+    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+    .nav-links a {
+      font-size: .78rem; font-weight: 500; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--gray); text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      background: var(--red); color: #fff !important;
+      padding: 9px 22px; font-weight: 600 !important;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+      transition: background .2s !important;
+    }
+    .nav-cta:hover { background: var(--red2) !important; }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span { width: 24px; height: 1.5px; background: #fff; display: block; transition: all .3s; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 60px 80px;
+      gap: 60px;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .hero-bg-text {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28vw; font-weight: 900;
+      color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.03);
+      letter-spacing: -.04em; pointer-events: none; user-select: none;
+      white-space: nowrap; line-height: 1;
+    }
+    .hero-left { position: relative; z-index: 2; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .8rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 28px;
+      opacity: 0; animation: fadeUp .7s .1s ease both;
+    }
+    .hero-tag::before { content: ''; width: 28px; height: 1px; background: var(--red); }
+    .hero-h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(4.5rem, 9vw, 8rem);
+      font-weight: 900; line-height: .9;
+      letter-spacing: -.01em; text-transform: uppercase;
+      margin-bottom: 32px;
+      opacity: 0; animation: fadeUp .8s .2s ease both;
+    }
+    .hero-h1 em { font-style: italic; color: var(--red); }
+    .hero-p {
+      font-size: 1rem; color: var(--gray); line-height: 1.8;
+      max-width: 440px; margin-bottom: 44px;
+      opacity: 0; animation: fadeUp .7s .35s ease both;
+    }
+    .hero-btns {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp .7s .45s ease both;
+    }
+    .btn-r {
+      background: var(--red); color: #fff;
+      padding: 14px 32px; font-weight: 600; font-size: .88rem;
+      letter-spacing: .06em; text-transform: uppercase; text-decoration: none;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition: background .2s, transform .2s;
+    }
+    .btn-r:hover { background: var(--red2); transform: translateY(-2px); }
+    .btn-o {
+      background: transparent; color: var(--white);
+      padding: 14px 32px; font-weight: 500; font-size: .88rem;
+      letter-spacing: .06em; text-transform: uppercase; text-decoration: none;
+      border: 1px solid var(--dim); transition: border-color .2s, transform .2s;
+    }
+    .btn-o:hover { border-color: rgba(255,255,255,.3); transform: translateY(-2px); }
+
+    /* Hero right — stats */
+    .hero-right {
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: var(--border); border: 1px solid var(--border);
+      opacity: 0; animation: fadeUp .8s .3s ease both;
+    }
+    .hero-stat {
+      background: var(--bg); padding: 40px 36px;
+      border-bottom: none; transition: background .2s;
+    }
+    .hero-stat:hover { background: var(--bg2); }
+    .stat-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 4rem; font-weight: 900; line-height: 1;
+      letter-spacing: -.02em; color: var(--white);
+      margin-bottom: 6px;
+    }
+    .stat-num span { color: var(--red); }
+    .stat-label { font-size: .78rem; color: var(--gray); letter-spacing: .05em; line-height: 1.5; }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      overflow: hidden; background: var(--red);
+      padding: 14px 0; border-bottom: 1px solid rgba(0,0,0,.2);
+    }
+    .marquee-track {
+      display: flex; gap: 0;
+      animation: marquee 22s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee-item {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem; font-weight: 700; letter-spacing: .15em;
+      text-transform: uppercase; color: #fff; padding: 0 36px;
+      flex-shrink: 0;
+    }
+    .marquee-dot { color: rgba(255,255,255,.4); }
+    @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+
+    /* ── PLANOS ── */
+    #planos {
+      border-bottom: 1px solid var(--border);
+    }
+    .planos-inner { max-width: 1200px; margin: 0 auto; padding: 120px 60px; }
+    .sec-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--red); display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px;
+    }
+    .sec-label::before { content: ''; width: 24px; height: 1px; background: var(--red); }
+    .planos-head {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 64px; gap: 40px;
+    }
+    .planos-h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 900;
+      text-transform: uppercase; line-height: .95; letter-spacing: -.01em;
+    }
+    .planos-sub { font-size: .9rem; color: var(--gray); max-width: 260px; line-height: 1.7; text-align: right; }
+    .planos-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .plano-card {
+      background: var(--bg); padding: 48px 40px;
+      display: flex; flex-direction: column;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .5s ease, transform .5s ease, background .25s;
+    }
+    .plano-card.on { opacity: 1; transform: translateY(0); }
+    .plano-card.destaque { background: var(--red); }
+    .plano-card:hover:not(.destaque) { background: var(--bg2); }
+    .plano-badge {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 24px;
+    }
+    .plano-card.destaque .plano-badge { color: rgba(255,255,255,.7); }
+    .plano-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.8rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .04em; margin-bottom: 6px;
+    }
+    .plano-price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3.5rem; font-weight: 900; line-height: 1;
+      letter-spacing: -.02em; margin-bottom: 4px;
+    }
+    .plano-price sup { font-size: 1.4rem; vertical-align: super; }
+    .plano-period { font-size: .78rem; color: var(--gray); margin-bottom: 36px; }
+    .plano-card.destaque .plano-period { color: rgba(255,255,255,.6); }
+    .plano-divider { height: 1px; background: var(--border); margin-bottom: 28px; }
+    .plano-card.destaque .plano-divider { background: rgba(255,255,255,.2); }
+    .plano-features { list-style: none; display: flex; flex-direction: column; gap: 12px; flex: 1; margin-bottom: 36px; }
+    .plano-features li { font-size: .88rem; color: var(--gray); display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+    .plano-card.destaque .plano-features li { color: rgba(255,255,255,.8); }
+    .plano-features li::before { content: '→'; color: var(--red); flex-shrink: 0; font-family: monospace; }
+    .plano-card.destaque .plano-features li::before { color: #fff; }
+    .plano-btn {
+      display: block; text-align: center;
+      padding: 14px; font-family: 'Barlow Condensed', sans-serif;
+      font-size: .85rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; text-decoration: none;
+      border: 1px solid var(--dim); color: var(--white);
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .plano-btn:hover { border-color: var(--red); color: var(--red); }
+    .plano-card.destaque .plano-btn {
+      background: rgba(0,0,0,.25); border-color: transparent; color: #fff;
+    }
+    .plano-card.destaque .plano-btn:hover { background: rgba(0,0,0,.4); }
+
+    /* ── SOBRE ── */
+    #sobre {
+      border-bottom: 1px solid var(--border);
+    }
+    .sobre-inner {
+      max-width: 1200px; margin: 0 auto; padding: 120px 60px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .sobre-visual {
+      position: relative;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      aspect-ratio: 4/5;
+    }
+    /* Decorative gym dumbbell illustration via CSS */
+    .sobre-visual::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(224,32,32,.08) 0%, transparent 60%);
+    }
+    .sobre-bars {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 45%; display: flex; align-items: flex-end; gap: 6px; padding: 0 24px 24px;
+    }
+    .sobre-bar-item {
+      flex: 1; background: var(--red); border-radius: 2px 2px 0 0;
+      opacity: .15; transition: opacity .3s;
+    }
+    .sobre-bar-item:nth-child(1) { height: 40%; }
+    .sobre-bar-item:nth-child(2) { height: 65%; }
+    .sobre-bar-item:nth-child(3) { height: 55%; }
+    .sobre-bar-item:nth-child(4) { height: 85%; }
+    .sobre-bar-item:nth-child(5) { height: 70%; }
+    .sobre-bar-item:nth-child(6) { height: 90%; opacity: .35; }
+    .sobre-bar-item:nth-child(7) { height: 75%; }
+    .sobre-center-text {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      text-align: center;
+    }
+    .sobre-big-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 7rem; font-weight: 900; line-height: 1;
+      color: var(--red); opacity: .9; letter-spacing: -.02em;
+    }
+    .sobre-big-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .8rem; letter-spacing: .25em; text-transform: uppercase;
+      color: var(--gray); margin-top: 4px;
+    }
+    .sobre-tag-corner {
+      position: absolute; top: 20px; right: 20px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .65rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--red); border: 1px solid var(--red);
+      padding: 4px 10px; opacity: .7;
+    }
+
+    .sobre-h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 900;
+      text-transform: uppercase; line-height: .95; letter-spacing: -.01em;
+      margin-bottom: 28px;
+    }
+    .sobre-h2 em { font-style: italic; color: var(--red); }
+    .sobre-p { font-size: .95rem; color: var(--gray); line-height: 1.85; margin-bottom: 16px; }
+    .sobre-stats { display: flex; gap: 40px; margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--border); }
+    .s-stat-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.6rem; font-weight: 900; line-height: 1;
+      color: var(--red); margin-bottom: 4px;
+    }
+    .s-stat-label { font-size: .75rem; color: var(--gray); letter-spacing: .05em; line-height: 1.5; }
+
+    /* ── MODALIDADES ── */
+    #modalidades {
+      border-bottom: 1px solid var(--border);
+    }
+    .mod-inner { max-width: 1200px; margin: 0 auto; padding: 120px 60px; }
+    .mod-head { margin-bottom: 60px; }
+    .mod-h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 900;
+      text-transform: uppercase; line-height: .95;
+    }
+    .mod-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .mod-card {
+      background: var(--bg); padding: 40px 36px;
+      position: relative; overflow: hidden;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity .5s ease, transform .5s ease, background .2s;
+    }
+    .mod-card.on { opacity: 1; transform: translateY(0); }
+    .mod-card:hover { background: var(--bg2); }
+    .mod-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .65rem; letter-spacing: .15em; color: var(--dim); margin-bottom: 20px;
+    }
+    .mod-icon { font-size: 2rem; margin-bottom: 16px; }
+    .mod-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .04em; margin-bottom: 10px;
+    }
+    .mod-desc { font-size: .85rem; color: var(--gray); line-height: 1.7; }
+    .mod-card-accent {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px; background: var(--red);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .35s ease;
+    }
+    .mod-card:hover .mod-card-accent { transform: scaleX(1); }
+
+    /* ── CTA ── */
+    #contato {
+      padding: 140px 60px; text-align: center;
+      overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(224,32,32,.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .cta-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+    }
+    .cta-label::before, .cta-label::after { content: ''; width: 24px; height: 1px; background: var(--red); }
+    .cta-h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(3rem, 10vw, 8rem); font-weight: 900;
+      text-transform: uppercase; line-height: .9;
+      letter-spacing: -.02em; margin-bottom: 40px;
+    }
+    .cta-h2 em { font-style: italic; color: var(--red); }
+    .cta-p { font-size: .98rem; color: var(--gray); margin-bottom: 52px; line-height: 1.75; }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 48px 60px 32px; border-top: 1px solid var(--border);
+    }
+    .foot-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 48px; margin-bottom: 40px; flex-wrap: wrap;
+    }
+    .foot-logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.4rem; font-weight: 900; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--white); text-decoration: none;
+    }
+    .foot-logo-text span { color: var(--red); }
+    .foot-tagline { font-size: .8rem; color: var(--gray); line-height: 1.7; max-width: 220px; margin-top: 10px; }
+    .foot-col { display: flex; flex-direction: column; gap: 8px; }
+    .foot-col-title { font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--dim); margin-bottom: 4px; }
+    .foot-col a { font-size: .8rem; color: #3a3a3a; text-decoration: none; transition: color .2s; }
+    .foot-col a:hover { color: var(--white); }
+    .foot-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 24px; border-top: 1px solid var(--border);
+      gap: 16px; flex-wrap: wrap;
+    }
+    .foot-copy { font-size: .7rem; color: var(--dim); }
+    .foot-back {
+      font-size: .7rem; color: var(--dim); text-decoration: none; transition: color .2s;
+    }
+    .foot-back:hover { color: var(--white); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.on { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:960px){
+      nav { padding: 18px 24px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      #hero { grid-template-columns: 1fr; padding: 100px 24px 60px; gap: 48px; }
+      .hero-right { grid-template-columns: 1fr 1fr; }
+      .planos-inner, .mod-inner { padding: 80px 24px; }
+      .planos-head, .mod-head { flex-direction: column; align-items: flex-start; }
+      .planos-sub { text-align: left; }
+      .planos-grid, .mod-grid { grid-template-columns: 1fr; }
+      .sobre-inner { grid-template-columns: 1fr; padding: 80px 24px; gap: 48px; }
+      .sobre-visual { aspect-ratio: 3/2; }
+      #contato { padding: 80px 24px; }
+      footer { padding: 40px 24px 28px; }
+      .foot-top { flex-direction: column; gap: 28px; }
+      .foot-bottom { flex-direction: column; text-align: center; }
+    }
+    @media(max-width:600px){
+      #hero { padding: 90px 20px 60px; }
+      .hero-btns, .cta-btns { flex-direction: column; align-items: stretch; }
+      .hero-btns a, .cta-btns a { text-align: center; }
+      .hero-right { grid-template-columns: 1fr 1fr; }
+      .planos-inner, .mod-inner { padding: 64px 20px; }
+      .plano-card { padding: 36px 28px; }
+      .sobre-stats { flex-wrap: wrap; gap: 24px; }
+      #contato { padding: 64px 20px; }
+      .cta-h2 { font-size: clamp(2.6rem, 13vw, 5rem); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">Iron<span>Fit</span></a>
+  <ul class="nav-links">
+    <li><a href="#planos">Planos</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#modalidades">Modalidades</a></li>
+    <li><a href="#contato" class="nav-cta">Matricule-se</a></li>
+  </ul>
+  <button class="hamburger" id="hbg"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mmenu" style="position:fixed;inset:0;background:rgba(12,12,12,.98);z-index:199;display:none;flex-direction:column;align-items:center;justify-content:center;gap:32px;">
+  <a href="#planos"      style="font-family:'Barlow Condensed',sans-serif;font-size:2.6rem;font-weight:900;color:#fff;text-decoration:none;text-transform:uppercase;letter-spacing:.04em;">Planos</a>
+  <a href="#sobre"       style="font-family:'Barlow Condensed',sans-serif;font-size:2.6rem;font-weight:900;color:#fff;text-decoration:none;text-transform:uppercase;letter-spacing:.04em;">Sobre</a>
+  <a href="#modalidades" style="font-family:'Barlow Condensed',sans-serif;font-size:2.6rem;font-weight:900;color:#fff;text-decoration:none;text-transform:uppercase;letter-spacing:.04em;">Modalidades</a>
+  <a href="#contato"     style="font-family:'Barlow Condensed',sans-serif;font-size:2.6rem;font-weight:900;color:var(--red);text-decoration:none;text-transform:uppercase;letter-spacing:.04em;">Matricule-se</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-text">FIT</div>
+
+  <div class="hero-left">
+    <div class="hero-tag">Alto Desempenho · Porto Alegre</div>
+    <h1 class="hero-h1">Forje seu<br>melhor<br><em>corpo.</em></h1>
+    <p class="hero-p">Equipamentos de última geração, professores especializados e um ambiente que transforma rotina em resultado. Sua evolução começa aqui.</p>
+    <div class="hero-btns">
+      <a href="#contato" class="btn-r">Quero me matricular</a>
+      <a href="#planos" class="btn-o">Ver planos</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-stat">
+      <div class="stat-num">1200<span>+</span></div>
+      <div class="stat-label">Alunos ativos<br>transformando seus corpos</div>
+    </div>
+    <div class="hero-stat">
+      <div class="stat-num">8<span>+</span></div>
+      <div class="stat-label">Anos de história<br>em Porto Alegre</div>
+    </div>
+    <div class="hero-stat">
+      <div class="stat-num">24<span>h</span></div>
+      <div class="stat-label">Funcionamento<br>7 dias por semana</div>
+    </div>
+    <div class="hero-stat">
+      <div class="stat-num">18</div>
+      <div class="stat-label">Professores<br>certificados</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Musculação <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Funcional <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">CrossFit <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Spinning <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Lutas <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Pilates <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Personal Trainer <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Avaliação Física <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Musculação <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Funcional <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">CrossFit <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Spinning <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Lutas <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Pilates <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Personal Trainer <span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Avaliação Física <span class="marquee-dot">●</span></span>
+  </div>
+</div>
+
+<!-- PLANOS -->
+<section id="planos">
+  <div class="planos-inner">
+    <div class="planos-head reveal">
+      <div>
+        <div class="sec-label">Invista em você</div>
+        <h2 class="planos-h2">Planos &<br>Valores</h2>
+      </div>
+      <p class="planos-sub">Sem fidelidade nos primeiros 30 dias. Cancele quando quiser.</p>
+    </div>
+
+    <div class="planos-grid" id="planosGrid">
+      <div class="plano-card">
+        <div class="plano-badge">01 — Básico</div>
+        <div class="plano-name">Starter</div>
+        <div class="plano-price"><sup>R$</sup>89</div>
+        <div class="plano-period">por mês · cobrado mensalmente</div>
+        <div class="plano-divider"></div>
+        <ul class="plano-features">
+          <li>Acesso à área de musculação</li>
+          <li>Horário limitado (6h–22h)</li>
+          <li>Avaliação física inicial</li>
+          <li>Vestiários e armários</li>
+        </ul>
+        <a href="#contato" class="plano-btn">Começar agora</a>
+      </div>
+
+      <div class="plano-card destaque">
+        <div class="plano-badge">02 — Mais popular</div>
+        <div class="plano-name">Pro</div>
+        <div class="plano-price"><sup>R$</sup>159</div>
+        <div class="plano-period">por mês · cobrado mensalmente</div>
+        <div class="plano-divider"></div>
+        <ul class="plano-features">
+          <li>Acesso completo 24h/7 dias</li>
+          <li>Todas as aulas coletivas</li>
+          <li>Avaliação física mensal</li>
+          <li>Montagem de treino personalizado</li>
+          <li>App de acompanhamento</li>
+        </ul>
+        <a href="#contato" class="plano-btn">Quero o Pro</a>
+      </div>
+
+      <div class="plano-card">
+        <div class="plano-badge">03 — Completo</div>
+        <div class="plano-name">Elite</div>
+        <div class="plano-price"><sup>R$</sup>299</div>
+        <div class="plano-period">por mês · cobrado mensalmente</div>
+        <div class="plano-divider"></div>
+        <ul class="plano-features">
+          <li>Tudo do plano Pro</li>
+          <li>4 sessões de personal/mês</li>
+          <li>Consultoria nutricional</li>
+          <li>Acesso ao lounge exclusivo</li>
+          <li>Convidado gratuito 1x/semana</li>
+        </ul>
+        <a href="#contato" class="plano-btn">Ser Elite</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="sobre-inner">
+    <div class="sobre-visual reveal">
+      <div class="sobre-tag-corner">Est. 2016</div>
+      <div class="sobre-center-text">
+        <div class="sobre-big-num">8</div>
+        <div class="sobre-big-label">Anos de evolução</div>
+      </div>
+      <div class="sobre-bars">
+        <div class="sobre-bar-item"></div>
+        <div class="sobre-bar-item"></div>
+        <div class="sobre-bar-item"></div>
+        <div class="sobre-bar-item"></div>
+        <div class="sobre-bar-item"></div>
+        <div class="sobre-bar-item"></div>
+        <div class="sobre-bar-item"></div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="sec-label">Nossa história</div>
+      <h2 class="sobre-h2">Mais que<br>uma academia.<br><em>Uma comunidade.</em></h2>
+      <p class="sobre-p">Fundada em 2016, a IronFit nasceu com uma missão simples: criar um espaço onde qualquer pessoa pudesse se transformar, independente do nível de condicionamento físico.</p>
+      <p class="sobre-p">Hoje somos referência em Porto Alegre, com mais de 1200 alunos ativos, equipamentos importados e uma equipe de professores que se dedicam ao seu resultado todo dia.</p>
+      <div class="sobre-stats">
+        <div>
+          <div class="s-stat-num">1200<sup style="font-size:1rem">+</sup></div>
+          <div class="s-stat-label">Alunos<br>transformados</div>
+        </div>
+        <div>
+          <div class="s-stat-num">18</div>
+          <div class="s-stat-label">Professores<br>certificados</div>
+        </div>
+        <div>
+          <div class="s-stat-num">98%</div>
+          <div class="s-stat-label">Satisfação<br>dos alunos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODALIDADES -->
+<section id="modalidades">
+  <div class="mod-inner">
+    <div class="mod-head reveal">
+      <div class="sec-label">O que oferecemos</div>
+      <h2 class="mod-h2">Modalidades</h2>
+    </div>
+    <div class="mod-grid" id="modGrid">
+      <div class="mod-card">
+        <div class="mod-num">01</div>
+        <div class="mod-icon">🏋️</div>
+        <div class="mod-name">Musculação</div>
+        <p class="mod-desc">Área ampla com equipamentos importados, peso livre completo e acompanhamento de professores qualificados.</p>
+        <div class="mod-card-accent"></div>
+      </div>
+      <div class="mod-card">
+        <div class="mod-num">02</div>
+        <div class="mod-icon">⚡</div>
+        <div class="mod-name">Funcional</div>
+        <p class="mod-desc">Treinos dinâmicos que desenvolvem força, resistência e mobilidade com movimentos do dia a dia.</p>
+        <div class="mod-card-accent"></div>
+      </div>
+      <div class="mod-card">
+        <div class="mod-num">03</div>
+        <div class="mod-icon">🔥</div>
+        <div class="mod-name">CrossFit</div>
+        <p class="mod-desc">WODs desafiadores com box completo. Comunidade forte que se apoia e se supera junto todos os dias.</p>
+        <div class="mod-card-accent"></div>
+      </div>
+      <div class="mod-card">
+        <div class="mod-num">04</div>
+        <div class="mod-icon">🚴</div>
+        <div class="mod-name">Spinning</div>
+        <p class="mod-desc">Studio climatizado com bikes profissionais e instrutores que transformam cada pedalada em resultado.</p>
+        <div class="mod-card-accent"></div>
+      </div>
+      <div class="mod-card">
+        <div class="mod-num">05</div>
+        <div class="mod-icon">🥊</div>
+        <div class="mod-name">Lutas</div>
+        <p class="mod-desc">Muay Thai, Boxe e Jiu-Jitsu com professores graduados. Defesa pessoal + condicionamento físico intenso.</p>
+        <div class="mod-card-accent"></div>
+      </div>
+      <div class="mod-card">
+        <div class="mod-num">06</div>
+        <div class="mod-icon">🧘</div>
+        <div class="mod-name">Pilates</div>
+        <p class="mod-desc">Fortalecimento do core, correção postural e reabilitação com equipamentos e instrutores especializados.</p>
+        <div class="mod-card-accent"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section id="contato">
+  <div class="cta-bg"></div>
+  <div class="cta-label reveal">Pronto para começar?</div>
+  <h2 class="cta-h2 reveal">Sua<br>evolução<br><em>começa hoje.</em></h2>
+  <p class="cta-p reveal">Matricule-se agora e ganhe 7 dias gratuitos.<br>Sem fidelidade. Cancele quando quiser.</p>
+  <div class="cta-btns reveal">
+    <a href="https://wa.me/5551999999999" target="_blank" class="btn-r">→ WhatsApp</a>
+    <a href="mailto:contato@ironfit.com.br" class="btn-o">E-mail</a>
+    <a href="https://www.instagram.com/" target="_blank" class="btn-o">Instagram</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-top">
+    <div>
+      <a href="#hero" class="foot-logo-text">Iron<span>Fit</span></a>
+      <p class="foot-tagline">Academia de alto desempenho em Porto Alegre. Equipamentos top, professores dedicados, resultados reais.</p>
+    </div>
+    <div class="foot-col">
+      <span class="foot-col-title">Navegação</span>
+      <a href="#planos">Planos</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#modalidades">Modalidades</a>
+      <a href="#contato">Contato</a>
+    </div>
+    <div class="foot-col">
+      <span class="foot-col-title">Contato</span>
+      <a href="https://wa.me/5551999999999" target="_blank">WhatsApp</a>
+      <a href="mailto:contato@ironfit.com.br">E-mail</a>
+      <a href="https://www.instagram.com/" target="_blank">Instagram</a>
+    </div>
+    <div class="foot-col">
+      <span class="foot-col-title">Horários</span>
+      <a>Seg–Sex: 05h–23h</a>
+      <a>Sábado: 07h–20h</a>
+      <a>Domingo: 08h–16h</a>
+      <a style="color:var(--red)">Plano Pro: 24h/7 dias</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span class="foot-copy">© 2026 IronFit Academia. Todos os direitos reservados.</span>
+    <a href="index.html" class="foot-back">← Voltar ao portfólio Pittdev</a>
+  </div>
+</footer>
+
+<script>
+// NAV SCROLL
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', scrollY > 50);
+});
+
+// HAMBURGER
+const hbg = document.getElementById('hbg'), mm = document.getElementById('mmenu');
+let open = false;
+hbg.addEventListener('click', () => {
+  open = !open; mm.style.display = open ? 'flex' : 'none';
+  hbg.children[0].style.transform = open ? 'rotate(45deg) translate(4.5px,4.5px)' : '';
+  hbg.children[1].style.opacity = open ? '0' : '1';
+  hbg.children[2].style.transform = open ? 'rotate(-45deg) translate(4.5px,-4.5px)' : '';
+});
+mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  open = false; mm.style.display = 'none';
+  hbg.children[0].style.transform = '';
+  hbg.children[1].style.opacity = '1';
+  hbg.children[2].style.transform = '';
+}));
+
+// REVEAL
+const ro = new IntersectionObserver(entries => entries.forEach((e, i) => {
+  if (e.isIntersecting) setTimeout(() => e.target.classList.add('on'), i * 55);
+}), { threshold: .1 });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+// CARDS STAGGER — planos
+const pgo = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) e.target.querySelectorAll('.plano-card').forEach((c, i) => setTimeout(() => c.classList.add('on'), i * 80));
+}), { threshold: .05 });
+document.querySelectorAll('#planosGrid').forEach(el => pgo.observe(el));
+
+// CARDS STAGGER — modalidades
+const mgo = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) e.target.querySelectorAll('.mod-card').forEach((c, i) => setTimeout(() => c.classList.add('on'), i * 70));
+}), { threshold: .05 });
+document.querySelectorAll('#modGrid').forEach(el => mgo.observe(el));
+</script>
+</body>
+</html>

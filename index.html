@@ -147,26 +147,104 @@
     /* ABOUT */
     #sobre {
       position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+    }
+    .sobre-inner {
       max-width: 1200px; margin: 0 auto;
       padding: 120px 60px;
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 80px; align-items: center;
+    }
+    .sobre-top {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 72px;
     }
     .sec-label {
       font-size: .7rem; letter-spacing: .15em;
       text-transform: uppercase; color: var(--gray);
       display: flex; align-items: center; gap: 12px;
-      margin-bottom: 20px;
     }
     .sec-label::before { content:''; width:24px; height:1px; background:var(--gray); }
-    .about-h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 800; line-height: 1.08;
-      letter-spacing: -.035em; margin-bottom: 28px;
+    .sobre-grid {
+      display: grid; grid-template-columns: 340px 1fr;
+      gap: 80px; align-items: start;
     }
-    .about-p { font-size: .95rem; color: var(--gray); line-height: 1.8; margin-bottom: 18px; }
-    .skill-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-    .skill-name { font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; min-width: 96px; }
+
+    /* Photo card */
+    .sobre-photo-col { display: flex; flex-direction: column; gap: 24px; }
+    .sobre-photo-wrap {
+      position: relative; width: 100%;
+      aspect-ratio: 3/4; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .sobre-photo-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      object-position: center top;
+      filter: grayscale(20%);
+      transition: filter .4s, transform .4s;
+    }
+    .sobre-photo-wrap:hover img { filter: grayscale(0%); transform: scale(1.03); }
+    .sobre-photo-placeholder {
+      width: 100%; height: 100%;
+      background: var(--black2);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+    }
+    .sobre-photo-placeholder svg { opacity: .18; }
+    .sobre-photo-placeholder span {
+      font-size: .65rem; color: #333; letter-spacing: .12em;
+      text-transform: uppercase; text-align: center; line-height: 1.6;
+    }
+    .sobre-badge {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 20px; border: 1px solid var(--border);
+      background: var(--black2);
+    }
+    .sobre-badge-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #4ade80; box-shadow: 0 0 8px #4ade80;
+      flex-shrink: 0; animation: blink 2s infinite;
+    }
+    .sobre-badge-text { font-size: .78rem; color: var(--gray); line-height: 1.5; }
+    .sobre-badge-text strong { color: #fff; font-weight: 600; display: block; }
+
+    /* Right content */
+    .sobre-content { padding-top: 4px; }
+    .sobre-name {
+      font-size: clamp(2.6rem, 5vw, 3.8rem);
+      font-weight: 900; line-height: .96;
+      letter-spacing: -.04em; margin-bottom: 8px;
+    }
+    .sobre-role {
+      font-size: .78rem; color: var(--gray);
+      letter-spacing: .12em; text-transform: uppercase;
+      margin-bottom: 40px; display: flex; align-items: center; gap: 10px;
+    }
+    .sobre-role::after { content:''; flex:1; height:1px; background:var(--border); }
+    .sobre-bio {
+      font-size: 1rem; color: var(--gray); line-height: 1.85;
+      margin-bottom: 16px; max-width: 560px;
+    }
+    .sobre-bio strong { color: #fff; font-weight: 600; }
+    .sobre-obj {
+      padding: 24px 28px; border: 1px solid var(--border);
+      background: var(--black2); margin-bottom: 48px; max-width: 560px;
+    }
+    .sobre-obj-label {
+      font-size: .62rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sobre-obj-label::before { content:'→'; color: #fff; }
+    .sobre-obj-text { font-size: .9rem; color: #ccc; line-height: 1.75; }
+
+    /* Skills */
+    .sobre-skills-label {
+      font-size: .62rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 24px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sobre-skills-label::before { content:''; width:16px; height:1px; background:var(--gray); }
+    .skill-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .skill-name { font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; min-width: 110px; }
     .skill-bar { flex:1; height: 1.5px; background: var(--border); border-radius: 2px; overflow: hidden; }
     .skill-fill {
       height: 100%; background: #fff; border-radius: 2px;
@@ -174,7 +252,17 @@
       transition: transform 1.3s cubic-bezier(.16,1,.3,1);
     }
     .skill-fill.on { transform: scaleX(1); }
-    .skill-pct { font-size: .75rem; color: var(--gray); min-width: 34px; text-align: right; }
+    .skill-pct { font-size: .72rem; color: var(--gray); min-width: 34px; text-align: right; }
+
+    /* Tech pills */
+    .sobre-techs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+    .sobre-tech {
+      font-size: .7rem; padding: 5px 14px;
+      border: 1px solid var(--border); color: var(--gray);
+      border-radius: 100px; letter-spacing: .05em;
+      transition: border-color .2s, color .2s;
+    }
+    .sobre-tech:hover { border-color: rgba(255,255,255,.3); color: #fff; }
 
     /* SERVICES */
     #servicos {
@@ -309,7 +397,9 @@
       nav{padding:18px 24px;}
       .nav-links{display:none;}
       .hamburger{display:flex;}
-      #sobre{grid-template-columns:1fr;padding:80px 24px;gap:44px;}
+      .sobre-inner{padding:80px 24px;}
+      .sobre-grid{grid-template-columns:1fr;gap:44px;}
+      .sobre-photo-wrap{aspect-ratio:4/3;max-width:400px;}
       .serv-inner{padding:80px 24px;}
       .serv-head{flex-direction:column;align-items:flex-start;}
       .serv-sub{text-align:left;}
@@ -329,7 +419,8 @@
       .hero-h1{font-size:clamp(3rem,16vw,5rem);}
       .hero-btns,.cta-btns{flex-direction:column;align-items:stretch;}
       .hero-btns a,.cta-btns a{width:100%;text-align:center;}
-      #sobre{padding:64px 20px;gap:32px;}
+      .sobre-inner{padding:64px 20px;}
+      .sobre-name{font-size:2.4rem;}
       .serv-inner{padding:64px 20px;}
       .serv-card{padding:32px 24px;}
       .proj-inner{padding:64px 20px;}
@@ -393,18 +484,69 @@
 
 <!-- SOBRE -->
 <section id="sobre">
-  <div class="about-left">
-    <div class="sec-label reveal">Sobre mim</div>
-    <h2 class="about-h2 reveal">Código limpo.<br>Resultados reais.</h2>
-    <p class="about-p reveal">Prazer, sou Matheus, dono do PittDev! Sou desenvolvedor web especializado em criar sites e landing pages que convertem visitantes em clientes. Cada projeto é construído com atenção aos detalhes, performance e experiência do usuário.</p>
-    <p class="about-p reveal">Trabalho de forma rápida e objetiva, sempre focado no que realmente importa para o seu negócio crescer online.</p>
-  </div>
-  <div class="about-right" id="skills">
-    <div class="sec-label reveal">O que eu domino</div>
-    <div class="skill-row reveal"><span class="skill-name">HTML</span><div class="skill-bar"><div class="skill-fill" data-w="1"></div></div><span class="skill-pct">100%</span></div>
-    <div class="skill-row reveal"><span class="skill-name">CSS</span><div class="skill-bar"><div class="skill-fill" data-w=".97"></div></div><span class="skill-pct">97%</span></div>
-    <div class="skill-row reveal"><span class="skill-name">JavaScript</span><div class="skill-bar"><div class="skill-fill" data-w=".88"></div></div><span class="skill-pct">88%</span></div>
-    <div class="skill-row reveal"><span class="skill-name">Landing Pages</span><div class="skill-bar"><div class="skill-fill" data-w=".95"></div></div><span class="skill-pct">95%</span></div>
+  <div class="sobre-inner">
+
+    <div class="sobre-top reveal">
+      <div class="sec-label">Sobre mim</div>
+    </div>
+
+    <div class="sobre-grid">
+
+      <!-- FOTO -->
+      <div class="sobre-photo-col reveal">
+        <div class="sobre-photo-wrap">
+          <!-- Troque "foto.jpg" pela sua foto real -->
+          <img src="foto.jpg" alt="Matheus Rafaelli" onerror="this.parentElement.innerHTML='<div class=\'sobre-photo-placeholder\'><svg width=\'64\' height=\'64\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'1\'><circle cx=\'12\' cy=\'8\' r=\'4\'/><path d=\'M4 20c0-4 3.6-7 8-7s8 3 8 7\'/></svg><span>Adicione sua<br>foto aqui<br><br>foto.jpg</span></div>'">
+        </div>
+        <div class="sobre-badge">
+          <div class="sobre-badge-dot"></div>
+          <div class="sobre-badge-text">
+            <strong>Disponível para projetos</strong>
+            Porto Alegre, RS · Brasil
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTEÚDO -->
+      <div class="sobre-content reveal">
+        <h2 class="sobre-name">Matheus<br>Rafaelli</h2>
+        <div class="sobre-role">Desenvolvedor Front-End</div>
+
+        <p class="sobre-bio">
+          Prazer! Sou desenvolvedor web especializado em criar <strong>sites e landing pages que convertem visitantes em clientes</strong>. Trabalho com HTML, CSS e JavaScript puro — sem frameworks desnecessários, código limpo e rápido do zero ao deploy.
+        </p>
+        <p class="sobre-bio">
+          Cada projeto que entrego é construído com atenção especial a <strong>performance, design responsivo e experiência do usuário</strong>. Acredito que um bom site precisa ser bonito, rápido e funcionar em qualquer tela.
+        </p>
+
+        <div class="sobre-obj">
+          <div class="sobre-obj-label">Objetivo</div>
+          <div class="sobre-obj-text">Ajudar negócios a crescerem online com sites profissionais que geram resultados reais — mais clientes, mais credibilidade e mais vendas.</div>
+        </div>
+
+        <div id="skills">
+          <div class="sobre-skills-label">Domínio técnico</div>
+          <div class="skill-row"><span class="skill-name">HTML5</span><div class="skill-bar"><div class="skill-fill" data-w="1"></div></div><span class="skill-pct">100%</span></div>
+          <div class="skill-row"><span class="skill-name">CSS3</span><div class="skill-bar"><div class="skill-fill" data-w=".97"></div></div><span class="skill-pct">97%</span></div>
+          <div class="skill-row"><span class="skill-name">JavaScript</span><div class="skill-bar"><div class="skill-fill" data-w=".88"></div></div><span class="skill-pct">88%</span></div>
+          <div class="skill-row"><span class="skill-name">Landing Pages</span><div class="skill-bar"><div class="skill-fill" data-w=".95"></div></div><span class="skill-pct">95%</span></div>
+          <div class="skill-row"><span class="skill-name">SEO On-page</span><div class="skill-bar"><div class="skill-fill" data-w=".82"></div></div><span class="skill-pct">82%</span></div>
+        </div>
+
+        <div class="sobre-techs">
+          <span class="sobre-tech">HTML5</span>
+          <span class="sobre-tech">CSS3</span>
+          <span class="sobre-tech">JavaScript ES6+</span>
+          <span class="sobre-tech">Flexbox & Grid</span>
+          <span class="sobre-tech">Responsive Design</span>
+          <span class="sobre-tech">CSS Animations</span>
+          <span class="sobre-tech">Git & GitHub</span>
+          <span class="sobre-tech">SEO Técnico</span>
+          <span class="sobre-tech">Web Performance</span>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -490,6 +632,14 @@
         <div class="proj-left">
           <span class="proj-n">03</span>
           <span class="proj-title">Lua Doce — Sorveteria Artesanal</span>
+        </div>
+        <div class="proj-tags"><span class="proj-tag">Landing Page</span><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JavaScript</span></div>
+        <div class="proj-arrow"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 9l7-7M2.5 2H9v6.5" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </a>
+      <a href="ironfit.html" target="_blank" class="proj-item">
+        <div class="proj-left">
+          <span class="proj-n">04</span>
+          <span class="proj-title">IronFit — Academia de Alto Desempenho</span>
         </div>
         <div class="proj-tags"><span class="proj-tag">Landing Page</span><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JavaScript</span></div>
         <div class="proj-arrow"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 9l7-7M2.5 2H9v6.5" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
