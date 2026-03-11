@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lua Doce — Sorveteria Artesanal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --vanilla: #fdf6ec;
+      --rose: #f2c4b0;
+      --blush: #e8a090;
+      --lilac: #c9b8d8;
+      --mint: #b3d4c8;
+      --caramel: #c47a3a;
+      --brown: #4a2e1a;
+      --text: #2a1a0e;
+      --muted: #8a6a58;
+      --soft: #f7ede4;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--vanilla);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* DOTS BG TEXTURE */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: radial-gradient(circle, rgba(196,122,58,.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 60px; height: 72px;
+      background: rgba(253,246,236,.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(196,122,58,.15);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.6rem; color: var(--brown);
+      letter-spacing: -.01em;
+    }
+    .nav-logo span { color: var(--caramel); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: .82rem; font-weight: 500;
+      letter-spacing: .05em; color: var(--muted);
+      text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--brown); }
+    .nav-btn {
+      font-size: .78rem; font-weight: 500;
+      background: var(--brown); color: var(--vanilla);
+      padding: 9px 22px; border-radius: 100px;
+      text-decoration: none; letter-spacing: .04em;
+      transition: background .2s;
+    }
+    .nav-btn:hover { background: #3a1e0c; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 40px 80px;
+      position: relative; z-index: 1;
+    }
+
+    /* DECO CIRCLES */
+    .deco-circle {
+      position: absolute; border-radius: 50%;
+      pointer-events: none;
+    }
+    .deco-1 {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(242,196,176,.35) 0%, transparent 70%);
+      top: -80px; right: -80px;
+    }
+    .deco-2 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(201,184,216,.3) 0%, transparent 70%);
+      bottom: 60px; left: -60px;
+    }
+    .deco-3 {
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(179,212,200,.35) 0%, transparent 70%);
+      top: 40%; left: 8%;
+    }
+
+    .hero-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--rose); color: var(--brown);
+      padding: 6px 18px; border-radius: 100px;
+      font-size: .75rem; font-weight: 500;
+      letter-spacing: .04em; margin-bottom: 2rem;
+      animation: fadeUp .7s ease both;
+    }
+    .dot-pink {
+      width: 6px; height: 6px; background: var(--blush);
+      border-radius: 50; animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .hero-h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 9vw, 8.5rem);
+      font-weight: 900; line-height: .95;
+      letter-spacing: -.03em; margin-bottom: 1.2rem;
+      animation: fadeUp .7s .1s ease both;
+    }
+    .hero-h1 .italic { font-style: italic; color: var(--caramel); }
+
+    .hero-moon {
+      font-size: clamp(5rem, 14vw, 11rem);
+      line-height: 1; display: block;
+      margin: .5rem 0 1rem;
+      animation: moonFloat 5s ease-in-out infinite, fadeUp .7s .15s ease both;
+      filter: drop-shadow(0 12px 32px rgba(196,122,58,.25));
+    }
+    @keyframes moonFloat { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-16px) rotate(3deg)} }
+
+    .hero-sub {
+      font-size: 1.05rem; color: var(--muted);
+      max-width: 480px; line-height: 1.75;
+      margin: 0 auto 2.5rem; font-weight: 300;
+      animation: fadeUp .7s .25s ease both;
+    }
+
+    .hero-btns {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp .7s .35s ease both;
+    }
+    .btn-caramel {
+      font-size: .85rem; font-weight: 500;
+      background: var(--caramel); color: #fff;
+      padding: 13px 30px; border-radius: 100px;
+      text-decoration: none; letter-spacing: .03em;
+      transition: background .2s, transform .15s;
+    }
+    .btn-caramel:hover { background: #b06a2a; transform: translateY(-2px); }
+    .btn-outline-brown {
+      font-size: .85rem; font-weight: 500;
+      background: transparent; color: var(--brown);
+      padding: 13px 30px; border-radius: 100px;
+      text-decoration: none; letter-spacing: .03em;
+      border: 1.5px solid rgba(74,46,26,.2);
+      transition: border-color .2s, transform .15s;
+    }
+    .btn-outline-brown:hover { border-color: var(--brown); transform: translateY(-2px); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+    /* FLAVORS */
+    #sabores {
+      position: relative; z-index: 1;
+      padding: 100px 60px;
+      background: var(--soft);
+    }
+    .sec-intro { text-align: center; margin-bottom: 60px; }
+    .sec-kicker {
+      font-size: .75rem; font-weight: 500; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--caramel); margin-bottom: .8rem;
+    }
+    .sec-h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 700; line-height: 1.05;
+      letter-spacing: -.02em;
+    }
+    .sec-h2 em { font-style: italic; color: var(--caramel); }
+
+    .flavors-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+    }
+    .flavor-card {
+      background: var(--vanilla);
+      border-radius: 20px; padding: 32px 24px;
+      text-align: center;
+      border: 1.5px solid transparent;
+      transition: border-color .3s, transform .3s, box-shadow .3s;
+    }
+    .flavor-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(74,46,26,.08);
+    }
+    .flavor-card.rose:hover { border-color: var(--rose); }
+    .flavor-card.lilac:hover { border-color: var(--lilac); }
+    .flavor-card.mint:hover { border-color: var(--mint); }
+    .flavor-card.caramel-c:hover { border-color: rgba(196,122,58,.4); }
+
+    .flavor-dot {
+      width: 56px; height: 56px; border-radius: 50%;
+      margin: 0 auto 1rem; display: flex; align-items: center;
+      justify-content: center; font-size: 1.8rem;
+    }
+    .rose .flavor-dot { background: var(--rose); }
+    .lilac .flavor-dot { background: var(--lilac); }
+    .mint .flavor-dot { background: var(--mint); }
+    .caramel-c .flavor-dot { background: rgba(196,122,58,.2); }
+
+    .flavor-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem; font-weight: 700;
+      margin-bottom: .4rem; color: var(--brown);
+    }
+    .flavor-desc { font-size: .8rem; color: var(--muted); line-height: 1.65; margin-bottom: .8rem; }
+    .flavor-price { font-size: .95rem; font-weight: 600; color: var(--caramel); }
+
+    /* SOBRE */
+    #sobre {
+      position: relative; z-index: 1;
+      padding: 100px 60px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .sobre-text .kicker {
+      font-size: .72rem; font-weight: 500; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--caramel); margin-bottom: 1rem;
+    }
+    .sobre-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 900; line-height: 1.05;
+      letter-spacing: -.02em; margin-bottom: 1.5rem;
+    }
+    .sobre-text h2 em { font-style: italic; color: var(--caramel); }
+    .sobre-text p { font-size: .95rem; color: var(--muted); line-height: 1.85; margin-bottom: 1rem; }
+    .sobre-visual-wrap {
+      background: var(--rose);
+      border-radius: 28px;
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10rem; position: relative; overflow: hidden;
+    }
+    .sobre-visual-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,.3), transparent 60%);
+    }
+    .sobre-visual-wrap::after {
+      content: '🌙';
+      position: absolute; bottom: 20px; right: 24px;
+      font-size: 2.5rem; opacity: .4;
+    }
+
+    /* DESTAQUE */
+    #destaque {
+      position: relative; z-index: 1;
+      background: var(--brown); color: var(--vanilla);
+      padding: 90px 60px; text-align: center;
+    }
+    #destaque::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(242,196,176,.07), transparent 65%);
+    }
+    .destaque-eyebrow {
+      font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--rose); margin-bottom: 1.2rem;
+    }
+    .destaque-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900; line-height: .95;
+      letter-spacing: -.02em; margin-bottom: 1.2rem;
+    }
+    .destaque-title em { font-style: italic; color: var(--rose); }
+    .destaque-desc { font-size: .95rem; color: rgba(253,246,236,.6); max-width: 420px; margin: 0 auto 2.5rem; line-height: 1.75; }
+    .btn-vanilla {
+      font-size: .85rem; font-weight: 500;
+      background: var(--vanilla); color: var(--brown);
+      padding: 13px 32px; border-radius: 100px;
+      text-decoration: none; letter-spacing: .03em;
+      display: inline-block;
+      transition: background .2s;
+    }
+    .btn-vanilla:hover { background: var(--rose); }
+
+    /* FOOTER */
+    footer {
+      position: relative; z-index: 1;
+      background: var(--soft);
+      padding: 40px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid rgba(196,122,58,.15);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .foot-brand {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-size: 1.4rem;
+      color: var(--brown);
+    }
+    .foot-brand span { color: var(--caramel); }
+    .foot-copy { font-size: .75rem; color: var(--muted); }
+    .foot-links { display: flex; gap: 1.5rem; }
+    .foot-links a {
+      font-size: .75rem; color: var(--muted);
+      text-decoration: none; transition: color .2s;
+    }
+    .foot-links a:hover { color: var(--brown); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s, transform .65s; }
+    .reveal.on { opacity: 1; transform: none; }
+
+    /* HAMBURGER */
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; background: none; border: none;
+      cursor: pointer; padding: 8px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--brown); transition: all .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4.5px,4.5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4.5px,-4.5px); }
+
+    .mobile-menu {
+      display: none; position: fixed; inset: 0;
+      background: rgba(253,246,236,.98); z-index: 150;
+      flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem; font-style: italic;
+      color: var(--brown); text-decoration: none; transition: color .2s;
+    }
+    .mobile-menu a:hover { color: var(--caramel); }
+
+    @media(max-width:900px) {
+      nav { padding: 0 24px; }
+      .nav-links, .nav-btn { display: none; }
+      .hamburger { display: flex; }
+    }
+    @media(max-width:768px) {
+      .hero { padding: 100px 24px 64px; }
+      .hero-moon { font-size: clamp(4rem,18vw,8rem); }
+      .hero-btns { flex-direction: column; align-items: center; }
+      .btn-caramel, .btn-outline-brown { width: 100%; max-width: 320px; text-align: center; padding: 15px 24px; }
+      .deco-1 { width: 260px; height: 260px; }
+      .deco-2 { width: 180px; height: 180px; }
+      #sabores { padding: 64px 20px; }
+      .flavors-grid { grid-template-columns: repeat(2,1fr); gap: 1rem; }
+      .flavor-card { padding: 24px 18px; }
+      .sec-intro { margin-bottom: 40px; }
+      #sobre { grid-template-columns: 1fr; padding: 64px 20px; gap: 40px; }
+      .sobre-visual-wrap { max-width: 320px; margin: 0 auto; }
+      #destaque { padding: 64px 20px; }
+      .btn-vanilla { width: 100%; max-width: 320px; text-align: center; }
+      footer { padding: 28px 20px; flex-direction: column; text-align: center; gap: 1.2rem; }
+      .foot-links { justify-content: center; }
+    }
+    @media(max-width:480px) {
+      .hero { padding: 88px 20px 52px; }
+      .hero-sub { font-size: .92rem; }
+      #sabores { padding: 52px 16px; }
+      .flavors-grid { grid-template-columns: 1fr; }
+      #sobre { padding: 52px 16px; }
+      #destaque { padding: 52px 16px; }
+      .destaque-desc { font-size: .88rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><em>Lua</em> <span>Doce</span></div>
+  <ul class="nav-links">
+    <li><a href="#sabores">Sabores</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#destaque">Especial do Dia</a></li>
+  </ul>
+  <a href="#destaque" class="nav-btn">Pedir Agora</a>
+  <button class="hamburger" id="hbg" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mmenu">
+  <a href="#sabores">Sabores</a>
+  <a href="#sobre">Sobre</a>
+  <a href="#destaque">Especial do Dia</a>
+  <a href="#destaque" style="color:var(--caramel)">Pedir Agora →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="deco-circle deco-1"></div>
+  <div class="deco-circle deco-2"></div>
+  <div class="deco-circle deco-3"></div>
+
+  <div class="hero-chip"><span class="dot-pink"></span>Sorveteria Artesanal — Porto Alegre</div>
+  <span class="hero-moon">🍦</span>
+  <h1 class="hero-h1">
+    Doce como<br>a <span class="italic">lua.</span>
+  </h1>
+  <p class="hero-sub">Sorvetes e açaís artesanais feitos com ingredientes naturais selecionados. Cada colherada conta uma história de cuidado e afeto.</p>
+  <div class="hero-btns">
+    <a href="#sabores" class="btn-caramel">Explorar Sabores</a>
+    <a href="#sobre" class="btn-outline-brown">Nossa História</a>
+  </div>
+</section>
+
+<!-- SABORES -->
+<section id="sabores">
+  <div class="sec-intro reveal">
+    <p class="sec-kicker">Feito com amor</p>
+    <h2 class="sec-h2">Sabores que<br><em>aquecem a alma</em></h2>
+  </div>
+  <div class="flavors-grid">
+    <div class="flavor-card rose reveal">
+      <div class="flavor-dot">🍓</div>
+      <h3 class="flavor-name">Morango Suíço</h3>
+      <p class="flavor-desc">Creme artesanal com morangos frescos e leve toque de baunilha bourbon.</p>
+      <span class="flavor-price">R$ 16,00</span>
+    </div>
+    <div class="flavor-card lilac reveal" style="transition-delay:.07s">
+      <div class="flavor-dot">🫐</div>
+      <h3 class="flavor-name">Blueberry Velvet</h3>
+      <p class="flavor-desc">Mirtilo selvagem, creme de leite fresco e um fio de mel silvestre.</p>
+      <span class="flavor-price">R$ 18,00</span>
+    </div>
+    <div class="flavor-card mint reveal" style="transition-delay:.14s">
+      <div class="flavor-dot">🌿</div>
+      <h3 class="flavor-name">Menta com Cacau</h3>
+      <p class="flavor-desc">Sorvete de menta fresca com lascas de chocolate 70% cacau.</p>
+      <span class="flavor-price">R$ 17,00</span>
+    </div>
+    <div class="flavor-card caramel-c reveal" style="transition-delay:.21s">
+      <div class="flavor-dot">🥜</div>
+      <h3 class="flavor-name">Caramelo Salgado</h3>
+      <p class="flavor-desc">Caramelo artesanal com flor de sal, amendoim torrado e creme de leite.</p>
+      <span class="flavor-price">R$ 18,00</span>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="sobre-text">
+    <p class="kicker reveal">Nossa história</p>
+    <h2 class="reveal" style="transition-delay:.08s">Uma <em>receita de<br>família</em> que o<br>mundo merece.</h2>
+    <p class="reveal" style="transition-delay:.12s">A Lua Doce nasceu da receita da vovó Lúcia, que fazia sorvetes artesanais para toda a família nos verões quentes de Santa Maria. Sua neta, Camila Fontes, decidiu em 2021 trazer esse afeto para Porto Alegre.</p>
+    <p class="reveal" style="transition-delay:.16s">Usamos apenas ingredientes naturais — sem corantes, sem conservantes. Cada pote é uma declaração de amor ao artesanal.</p>
+  </div>
+  <div class="sobre-visual-wrap reveal" style="transition-delay:.1s">
+    🍨
+  </div>
+</section>
+
+<!-- DESTAQUE -->
+<section id="destaque">
+  <p class="destaque-eyebrow reveal">Especial desta semana</p>
+  <h2 class="destaque-title reveal">Sundae de<br><em>Frutas Vermelhas</em></h2>
+  <p class="destaque-desc reveal">Duas bolas de sorvete de morango e blueberry, calda quente de frutas vermelhas, chantilly artesanal e raspas de limão siciliano.</p>
+  <a href="#" class="btn-vanilla reveal">Pedir Agora — R$ 26,00</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-brand"><em>Lua</em> <span>Doce</span></div>
+  <p class="foot-copy">© 2026 Lua Doce Sorveteria. Porto Alegre, RS.</p>
+  <div class="foot-links">
+    <a href="#">Instagram</a>
+    <a href="#">iFood</a>
+    <a href="#">Contato</a>
+  </div>
+</footer>
+
+<script>
+const hbg = document.getElementById('hbg');
+const mmenu = document.getElementById('mmenu');
+hbg.addEventListener('click', () => {
+  hbg.classList.toggle('open');
+  mmenu.classList.toggle('open');
+  document.body.style.overflow = mmenu.classList.contains('open') ? 'hidden' : '';
+});
+mmenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  hbg.classList.remove('open'); mmenu.classList.remove('open');
+  document.body.style.overflow = '';
+}));
+
+const ro = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => { if(e.isIntersecting) setTimeout(()=>e.target.classList.add('on'), i*55); });
+}, {threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+</script>
+</body>
+</html>

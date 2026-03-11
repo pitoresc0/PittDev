@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brasa Burger — Feito na Brasa, do Jeito Certo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --coal: #0e0c0b;
+      --ash: #1a1714;
+      --ember: #c94b1a;
+      --flame: #e8621e;
+      --gold: #d4a232;
+      --cream: #f5ede0;
+      --smoke: #3a342e;
+      --text: #f0e8dc;
+      --muted: #8a7a6a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--coal);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* GRAIN */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: .5;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 60px; height: 72px;
+      background: rgba(14,12,11,.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(201,75,26,.2);
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem; letter-spacing: .06em;
+      color: var(--text);
+    }
+    .nav-logo span { color: var(--ember); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .82rem; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--cream); }
+    .nav-order {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .8rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      background: var(--ember); color: #fff;
+      padding: 9px 22px; border: none;
+      text-decoration: none; transition: background .2s;
+    }
+    .nav-order:hover { background: var(--flame); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-left {
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 120px 60px 80px;
+      position: relative; z-index: 2;
+    }
+    .hero-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--ember); margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .hero-tag::before { content: ''; width: 32px; height: 1px; background: var(--ember); }
+    .hero-h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 9vw, 9.5rem);
+      line-height: .88; letter-spacing: .02em;
+      margin-bottom: 2rem;
+    }
+    .hero-h1 .line2 { color: var(--ember); -webkit-text-stroke: 0; }
+    .hero-h1 .line3 { color: transparent; -webkit-text-stroke: 1.5px rgba(240,232,220,.2); }
+    .hero-desc {
+      font-size: 1.05rem; color: var(--muted);
+      line-height: 1.75; max-width: 380px; margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-fire {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .85rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      background: var(--ember); color: #fff;
+      padding: 14px 32px; text-decoration: none;
+      transition: background .2s, transform .15s;
+    }
+    .btn-fire:hover { background: var(--flame); transform: translateY(-2px); }
+    .btn-ghost {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .85rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      background: transparent; color: var(--text);
+      padding: 14px 32px; text-decoration: none;
+      border: 1px solid var(--smoke);
+      transition: border-color .2s, transform .15s;
+    }
+    .btn-ghost:hover { border-color: var(--muted); transform: translateY(-2px); }
+
+    /* HERO RIGHT — visual */
+    .hero-right {
+      position: relative; overflow: hidden;
+      background: var(--ash);
+    }
+    .hero-right::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(201,75,26,.18) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 50%, rgba(212,162,50,.08) 0%, transparent 70%);
+    }
+    .hero-right-inner {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .burger-visual {
+      font-size: 14rem; line-height: 1;
+      filter: drop-shadow(0 0 60px rgba(201,75,26,.4));
+      animation: float 4s ease-in-out infinite;
+      user-select: none;
+    }
+    @keyframes float {
+      0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)}
+    }
+    .hero-badge {
+      position: absolute; bottom: 48px; right: 48px;
+      width: 110px; height: 110px;
+      border: 2px solid var(--ember);
+      border-radius: 50%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      animation: spin 20s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .badge-inner {
+      animation: spin-reverse 20s linear infinite;
+    }
+    @keyframes spin-reverse { to { transform: rotate(-360deg); } }
+    .badge-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem; color: var(--ember); line-height: 1;
+    }
+    .badge-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .58rem; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted);
+      line-height: 1.3;
+    }
+
+    /* DIVIDER STRIP */
+    .strip {
+      background: var(--ember);
+      padding: .6rem 0; overflow: hidden;
+    }
+    .strip-inner {
+      display: flex; gap: 3rem;
+      width: max-content;
+      animation: marquee 16s linear infinite;
+    }
+    .strip-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem; letter-spacing: .12em;
+      color: #fff; white-space: nowrap;
+      display: flex; align-items: center; gap: .8rem;
+    }
+    .strip-item .sep { color: rgba(255,255,255,.4); font-size: .6rem; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* MENU SECTION */
+    #cardapio { background: var(--ash); padding: 100px 60px; }
+    .sec-header { text-align: center; margin-bottom: 64px; }
+    .sec-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--ember); margin-bottom: .8rem;
+    }
+    .sec-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      letter-spacing: .03em; line-height: .95;
+    }
+    .sec-title em { font-style: italic; color: var(--ember); }
+
+    .menu-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 2px; max-width: 1100px; margin: 0 auto;
+    }
+    .menu-card {
+      background: var(--coal);
+      padding: 44px 36px;
+      border: 1px solid transparent;
+      transition: border-color .3s, transform .3s;
+      position: relative; overflow: hidden;
+    }
+    .menu-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(201,75,26,.06), transparent);
+      opacity: 0; transition: opacity .3s;
+    }
+    .menu-card:hover { border-color: rgba(201,75,26,.3); transform: translateY(-4px); }
+    .menu-card:hover::before { opacity: 1; }
+    .menu-emoji { font-size: 2.8rem; margin-bottom: 1.2rem; display: block; }
+    .menu-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem; font-weight: 700;
+      letter-spacing: .02em; margin-bottom: .5rem;
+    }
+    .menu-desc { font-size: .85rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+    .menu-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem; color: var(--gold);
+      letter-spacing: .05em;
+    }
+
+    /* SOBRE */
+    #sobre {
+      padding: 100px 60px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .sobre-visual {
+      background: var(--ash);
+      aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9rem; position: relative; overflow: hidden;
+    }
+    .sobre-visual::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(201,75,26,.12), transparent);
+    }
+    .sobre-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--ember); margin-bottom: 1.2rem;
+    }
+    .sobre-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: .93; letter-spacing: .02em;
+      margin-bottom: 1.5rem;
+    }
+    .sobre-title span { color: var(--ember); }
+    .sobre-p { font-size: .95rem; color: var(--muted); line-height: 1.85; margin-bottom: 1.2rem; }
+    .sobre-stats {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1px; background: var(--smoke);
+      border: 1px solid var(--smoke); margin-top: 2.5rem;
+    }
+    .stat {
+      background: var(--coal); padding: 20px;
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem; color: var(--ember); letter-spacing: .04em;
+    }
+    .stat-label { font-size: .72rem; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+
+    /* CTA */
+    #reserva {
+      background: var(--ember);
+      padding: 80px 60px; text-align: center;
+    }
+    .cta-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      letter-spacing: .03em; line-height: .92;
+      color: #fff; margin-bottom: 1rem;
+    }
+    .cta-sub { font-size: 1rem; color: rgba(255,255,255,.7); margin-bottom: 2rem; }
+    .btn-cta-dark {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .9rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      background: var(--coal); color: var(--text);
+      padding: 16px 40px; text-decoration: none;
+      display: inline-block;
+      transition: background .2s;
+    }
+    .btn-cta-dark:hover { background: #000; }
+
+    /* FOOTER */
+    footer {
+      background: var(--ash);
+      padding: 40px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--smoke);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .foot-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem; letter-spacing: .06em; color: var(--text);
+    }
+    .foot-logo span { color: var(--ember); }
+    .foot-copy { font-size: .75rem; color: var(--muted); }
+    .foot-socials { display: flex; gap: 1.5rem; }
+    .foot-socials a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem; font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: color .2s;
+    }
+    .foot-socials a:hover { color: var(--cream); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s, transform .7s; }
+    .reveal.on { opacity: 1; transform: none; }
+
+    /* HAMBURGER */
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; background: none; border: none;
+      cursor: pointer; padding: 8px; z-index: 200;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--text); transition: all .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4.5px,4.5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4.5px,-4.5px); }
+
+    .mobile-menu {
+      display: none; position: fixed; inset: 0;
+      background: rgba(14,12,11,.97); z-index: 150;
+      flex-direction: column; align-items: center; justify-content: center; gap: 2.4rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem; letter-spacing: .06em;
+      color: var(--text); text-decoration: none; transition: color .2s;
+    }
+    .mobile-menu a:hover { color: var(--ember); }
+
+    @media(max-width:900px) {
+      nav { padding: 0 24px; }
+      .nav-links, .nav-order { display: none; }
+      .hamburger { display: flex; }
+    }
+    @media(max-width:768px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 100px 24px 50px; }
+      .hero-right { height: 300px; }
+      .burger-visual { font-size: 8rem; }
+      .hero-badge { width: 84px; height: 84px; bottom: 24px; right: 24px; }
+      .badge-num { font-size: 1.3rem; }
+      .hero-btns { flex-direction: column; align-items: flex-start; }
+      .btn-fire, .btn-ghost { width: 100%; text-align: center; padding: 16px 24px; }
+      #cardapio { padding: 64px 20px; }
+      .menu-grid { grid-template-columns: 1fr; gap: 2px; }
+      .sec-header { margin-bottom: 40px; }
+      #sobre { grid-template-columns: 1fr; padding: 64px 20px; gap: 40px; }
+      .sobre-stats { grid-template-columns: repeat(3,1fr); }
+      #reserva { padding: 64px 20px; }
+      .btn-cta-dark { width: 100%; text-align: center; padding: 16px 24px; }
+      footer { padding: 28px 20px; flex-direction: column; text-align: center; gap: 1.2rem; }
+      .foot-socials { justify-content: center; }
+    }
+    @media(max-width:480px) {
+      .hero-left { padding: 88px 20px 44px; }
+      .hero-desc { font-size: .95rem; }
+      #cardapio { padding: 52px 16px; }
+      .menu-card { padding: 32px 24px; }
+      #sobre { padding: 52px 16px; }
+      .sobre-stats { grid-template-columns: repeat(3,1fr); }
+      .stat-num { font-size: 1.7rem; }
+      #reserva { padding: 52px 16px; }
+      .strip-item { font-size: .9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">BRASA<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#cardapio">Cardápio</a></li>
+    <li><a href="#sobre">Nossa História</a></li>
+    <li><a href="#reserva">Reservas</a></li>
+  </ul>
+  <a href="#reserva" class="nav-order">Pedir Agora</a>
+  <button class="hamburger" id="hbg" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mmenu">
+  <a href="#cardapio">Cardápio</a>
+  <a href="#sobre">Nossa História</a>
+  <a href="#reserva">Reservas</a>
+  <a href="#reserva" style="color:var(--ember)">Pedir Agora →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">Porto Alegre, RS</p>
+    <h1 class="hero-h1">
+      FEITO<br>
+      <span class="line2">NA</span><br>
+      <span class="line3">BRASA.</span>
+    </h1>
+    <p class="hero-desc">Smash burgers artesanais grelhados na brasa de carvão. Carne fresquinha, molhos próprios e aquela casquinha dourada que você não esquece.</p>
+    <div class="hero-btns">
+      <a href="#cardapio" class="btn-fire">Ver Cardápio</a>
+      <a href="#sobre" class="btn-ghost">Nossa História</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-inner">
+      <div class="burger-visual">🍔</div>
+    </div>
+    <div class="hero-badge">
+      <div class="badge-inner">
+        <div class="badge-num">★</div>
+        <div class="badge-label">Desde<br>2019</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-inner">
+    <span class="strip-item">Smash Burger <span class="sep">✦</span></span>
+    <span class="strip-item">Batata Rústica <span class="sep">✦</span></span>
+    <span class="strip-item">Molhos Próprios <span class="sep">✦</span></span>
+    <span class="strip-item">Milk Shake Artesanal <span class="sep">✦</span></span>
+    <span class="strip-item">Carvão Vegetal <span class="sep">✦</span></span>
+    <span class="strip-item">Feito na Hora <span class="sep">✦</span></span>
+    <span class="strip-item">Smash Burger <span class="sep">✦</span></span>
+    <span class="strip-item">Batata Rústica <span class="sep">✦</span></span>
+    <span class="strip-item">Molhos Próprios <span class="sep">✦</span></span>
+    <span class="strip-item">Milk Shake Artesanal <span class="sep">✦</span></span>
+    <span class="strip-item">Carvão Vegetal <span class="sep">✦</span></span>
+    <span class="strip-item">Feito na Hora <span class="sep">✦</span></span>
+  </div>
+</div>
+
+<!-- CARDÁPIO -->
+<section id="cardapio">
+  <div class="sec-header reveal">
+    <p class="sec-eyebrow">O que tem na brasa</p>
+    <h2 class="sec-title">NOSSO<br><em>CARDÁPIO</em></h2>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card reveal">
+      <span class="menu-emoji">🔥</span>
+      <h3 class="menu-name">Brasa Classic</h3>
+      <p class="menu-desc">Dois smash de 80g, queijo americano derretido, alface, tomate, picles e nosso molho brasa.</p>
+      <span class="menu-price">R$ 32,00</span>
+    </div>
+    <div class="menu-card reveal" style="transition-delay:.08s">
+      <span class="menu-emoji">🌶️</span>
+      <h3 class="menu-name">Inferno</h3>
+      <p class="menu-desc">Smash duplo com pimenta jalapeño, molho sriracha caseiro, cebola caramelizada e cheddar cremoso.</p>
+      <span class="menu-price">R$ 38,00</span>
+    </div>
+    <div class="menu-card reveal" style="transition-delay:.16s">
+      <span class="menu-emoji">🧀</span>
+      <h3 class="menu-name">Cheese Monster</h3>
+      <p class="menu-desc">Triplo smash afogado em queijo cheddar, muçarela e provolone. Não é pra fracos.</p>
+      <span class="menu-price">R$ 45,00</span>
+    </div>
+    <div class="menu-card reveal" style="transition-delay:.04s">
+      <span class="menu-emoji">🍟</span>
+      <h3 class="menu-name">Batata Rústica</h3>
+      <p class="menu-desc">Batatas em fatias grossas, temperadas com alecrim, alho e azeite. Crocantes por fora, macias por dentro.</p>
+      <span class="menu-price">R$ 18,00</span>
+    </div>
+    <div class="menu-card reveal" style="transition-delay:.12s">
+      <span class="menu-emoji">🥤</span>
+      <h3 class="menu-name">Milk Shake Brasa</h3>
+      <p class="menu-desc">Shake de baunilha com calda de caramelo salgado e crocante de amendoim. Viciante.</p>
+      <span class="menu-price">R$ 22,00</span>
+    </div>
+    <div class="menu-card reveal" style="transition-delay:.2s">
+      <span class="menu-emoji">🌿</span>
+      <h3 class="menu-name">Veggie Fire</h3>
+      <p class="menu-desc">Blend de grão-de-bico e beterraba grelhado, cream cheese de ervas, rúcula e tomate seco.</p>
+      <span class="menu-price">R$ 34,00</span>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="sobre-visual reveal">
+    🔥
+  </div>
+  <div class="reveal" style="transition-delay:.12s">
+    <p class="sobre-label">Quem somos</p>
+    <h2 class="sobre-title">UMA PAIXÃO<br>QUE <span>VIROU</span><br>NEGÓCIO.</h2>
+    <p class="sobre-p">Tudo começou numa churrasqueira improvisada no quintal. Rafael Braga passou anos aperfeiçoando a técnica do smash burger — aquela pressão certa na chapa, o timing perfeito, a carne que quase se derrete.</p>
+    <p class="sobre-p">Em 2019, abriu as portas da Brasa Burger com 4 mesas e uma proposta simples: fazer o melhor hambúrguer da cidade, sem frescura e sem fila de espera.</p>
+    <div class="sobre-stats">
+      <div class="stat"><div class="stat-num">5★</div><div class="stat-label">Avaliação</div></div>
+      <div class="stat"><div class="stat-num">+2k</div><div class="stat-label">Pedidos/mês</div></div>
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Anos de brasa</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="reserva">
+  <h2 class="cta-title reveal">FAÇA SUA<br>RESERVA AGORA.</h2>
+  <p class="cta-sub reveal">Terça a domingo, das 18h às 23h. Delivery disponível até 10km.</p>
+  <a href="https://wa.me/5551999999999" class="btn-cta-dark reveal">→ Reservar pelo WhatsApp</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">BRASA<span>.</span></div>
+  <p class="foot-copy">© 2026 Brasa Burger. Porto Alegre, RS.</p>
+  <div class="foot-socials">
+    <a href="#">Instagram</a>
+    <a href="#">iFood</a>
+    <a href="#">Rappi</a>
+  </div>
+</footer>
+
+<script>
+const hbg = document.getElementById('hbg');
+const mmenu = document.getElementById('mmenu');
+hbg.addEventListener('click', () => {
+  hbg.classList.toggle('open');
+  mmenu.classList.toggle('open');
+  document.body.style.overflow = mmenu.classList.contains('open') ? 'hidden' : '';
+});
+mmenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  hbg.classList.remove('open'); mmenu.classList.remove('open');
+  document.body.style.overflow = '';
+}));
+
+const ro = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => { if(e.isIntersecting) setTimeout(()=>e.target.classList.add('on'), i*60); });
+}, {threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+</script>
+</body>
+</html>
